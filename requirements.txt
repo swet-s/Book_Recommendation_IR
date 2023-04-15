@@ -1,0 +1,16 @@
+flask~=2.2.3
+flask_sqlalchemy
+flask_bcrypt
+flask_login
+flask_table
+flask_wtf
+email_validator
+numpy~=1.23.5
+pandas~=2.0.0
+sklearn
+flask_mail
+pillow~=9.5.0
+
+WTForms~=3.0.1
+nltk~=3.8.1
+scikit-learn~=1.2.2
