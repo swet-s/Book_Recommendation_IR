@@ -12,81 +12,81 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 
 
-def boolean_retrieval(books_user_likes, book_data):
-
-    # Preprocess the book data
-    stop_words = set(stopwords.words('english'))
-    stemmer = PorterStemmer()
-
-    book_data['Title'] = book_data['Title'].apply(lambda x: x.lower())
-    book_data['Title'] = book_data['Title'].apply(
-        lambda x: ' '.join([stemmer.stem(word) for word in word_tokenize(x) if word not in stop_words]))
-    book_data['Author'] = book_data['Author'].apply(lambda x: x.lower())
-    book_data['Author'] = book_data['Author'].apply(
-        lambda x: ' '.join([stemmer.stem(word) for word in word_tokenize(x) if word not in stop_words]))
-
-    index = {}
-
-    for i, row in book_data.iterrows():
-        for feature in ['Title', 'Author']:
-            for word in word_tokenize(row[feature]):
-                if word not in index:
-                    index[word] = {i}
-                else:
-                    index[word].add(i)
-
-    # Define a function to search the index using boolean operators
-    def boolean_search(books_user_likes):
-        query = books_user_likes.lower()
-        terms = word_tokenize(books_user_likes)
-        doc_set = set(range(len(book_data)))
-
-        # Process each term in the query
-        for term in terms:
-            if term == 'and':
-                continue
-            elif term == 'or':
-                continue
-            elif term == 'not':
-                continue
-            else:
-                if term in index:
-                    doc_set = doc_set.intersection(index[term])
-                else:
-                    doc_set = set()
-                    break
-
-        # Process the boolean operators in the query
-        for i in range(1, len(terms), 2):
-            operator = terms[i]
-            term = terms[i + 1]
-            if term in index:
-                if operator == 'and':
-                    doc_set = doc_set.intersection(index[term])
-                elif operator == 'or':
-                    doc_set = doc_set.union(index[term])
-                elif operator == 'not':
-                    doc_set = doc_set.difference(index[term])
-
-        return doc_set
-
-    def recommend_books(books_user_likes, num_recommendations=10):
-        matching_docs = boolean_search(books_user_likes)
-        relevance_scores = []
-        for i in matching_docs:
-            doc = book_data.iloc[i]
-            relevance_scores.append((i, len(set(books_user_likes.split()) & set(doc['Author'].split()))))
-        relevance_scores = sorted(relevance_scores, key=lambda x: x[1], reverse=True)
-        top_books = []
-        for i in range(min(num_recommendations, len(relevance_scores))):
-            top_books.append(book_data.iloc[relevance_scores[i][0]]['Title'])
-
-        return top_books
-
-    # Define a function to recommend books
-    top_books = recommend_books(books_user_likes, 10)
-
-    return top_books
+# def boolean_retrieval(books_user_likes, book_data):
+#
+#     # Preprocess the book data
+#     stop_words = set(stopwords.words('english'))
+#     stemmer = PorterStemmer()
+#
+#     book_data['Title'] = book_data['Title'].apply(lambda x: x.lower())
+#     book_data['Title'] = book_data['Title'].apply(
+#         lambda x: ' '.join([stemmer.stem(word) for word in word_tokenize(x) if word not in stop_words]))
+#     book_data['Author'] = book_data['Author'].apply(lambda x: x.lower())
+#     book_data['Author'] = book_data['Author'].apply(
+#         lambda x: ' '.join([stemmer.stem(word) for word in word_tokenize(x) if word not in stop_words]))
+#
+#     index = {}
+#
+#     for i, row in book_data.iterrows():
+#         for feature in ['Title', 'Author']:
+#             for word in word_tokenize(row[feature]):
+#                 if word not in index:
+#                     index[word] = {i}
+#                 else:
+#                     index[word].add(i)
+#
+#     # Define a function to search the index using boolean operators
+#     def boolean_search(books_user_likes):
+#         query = books_user_likes.lower()
+#         terms = word_tokenize(books_user_likes)
+#         doc_set = set(range(len(book_data)))
+#
+#         # Process each term in the query
+#         for term in terms:
+#             if term == 'and':
+#                 continue
+#             elif term == 'or':
+#                 continue
+#             elif term == 'not':
+#                 continue
+#             else:
+#                 if term in index:
+#                     doc_set = doc_set.intersection(index[term])
+#                 else:
+#                     doc_set = set()
+#                     break
+#
+#         # Process the boolean operators in the query
+#         for i in range(1, len(terms), 2):
+#             operator = terms[i]
+#             term = terms[i + 1]
+#             if term in index:
+#                 if operator == 'and':
+#                     doc_set = doc_set.intersection(index[term])
+#                 elif operator == 'or':
+#                     doc_set = doc_set.union(index[term])
+#                 elif operator == 'not':
+#                     doc_set = doc_set.difference(index[term])
+#
+#         return doc_set
+#
+#     def recommend_books(books_user_likes, num_recommendations=10):
+#         matching_docs = boolean_search(books_user_likes)
+#         relevance_scores = []
+#         for i in matching_docs:
+#             doc = book_data.iloc[i]
+#             relevance_scores.append((i, len(set(books_user_likes.split()) & set(doc['Author'].split()))))
+#         relevance_scores = sorted(relevance_scores, key=lambda x: x[1], reverse=True)
+#         top_books = []
+#         for i in range(min(num_recommendations, len(relevance_scores))):
+#             top_books.append(book_data.iloc[relevance_scores[i][0]]['Title'])
+#
+#         return top_books
+#
+#     # Define a function to recommend books
+#     top_books = recommend_books(books_user_likes, 10)
+#
+#     return top_books
 
 def vector_space(books_user_likes, book_data):
     books = []
