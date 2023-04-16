@@ -186,7 +186,7 @@ def recom(books_user_likes):
 
 
 def bookdisp():
-    books = pd.read_csv("C:\\Projects\\python\\book_recom\\dataset\\Bookz.csv")
+    books = pd.read_csv("C:\\Projects\\python\\book_recom\\dataset\\Book.csv")
     img = pd.read_csv("C:\\Projects\\python\\book_recom\\dataset\\Imagez.csv")
 
     title = []
