@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local development settings
+.env
+.env.local
+*.sqlite
+
+# Logs
+*.log
+logs/
+
+# Dataset
+Bookz.csv
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Heroku-specific files
+*.pyc
+/static
+#/runtime.txt
