@@ -19,6 +19,14 @@ app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///site.db'
 db=SQLAlchemy(app)
 
+
+# Get the absolute path of the directory containing the current script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# Get the absolute path of the parent directory
+parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+# Construct the path to the file you want to access
+dataset_path = os.path.join(parent_dir, 'dataset', 'Book.csv')
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
@@ -38,7 +46,7 @@ def home():
 @app.route("/recommender",methods=['GET','POST'])
 def recommender():
     form=BookForm()
-    df=pd.read_csv('C:\\Projects\\python\\book_recom\\dataset\\Book.csv')
+    df=pd.read_csv(dataset_path)
 
     if form.bookname.data in list(df['Title']):
         flash(f'Here are the following recommendations for you', 'success')

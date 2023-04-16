@@ -1,6 +1,7 @@
 import nltk
 import numpy as np
 import pandas as pd
+import os
 
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
@@ -10,6 +11,14 @@ from sklearn.metrics.pairwise import cosine_similarity
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
+
+# Get the absolute path of the directory containing the current script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# Get the absolute path of the parent directory
+parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+# Construct the path to the file you want to access
+dataset_path = os.path.join(parent_dir, 'dataset', 'Book.csv')
+image_path = os.path.join(parent_dir, 'dataset', 'Imagez.csv')
 
 
 # def boolean_retrieval(books_user_likes, book_data):
@@ -143,7 +152,7 @@ def recom(books_user_likes):
     def get_index_from_title(Title):
         return book_data[book_data.Title == Title]["index"].values[0]
 
-    book_data = pd.read_csv(r"C:\Projects\python\book_recom\dataset\Book.csv")
+    book_data = pd.read_csv(dataset_path)
 
     # top_books = boolean_retrieval(books_user_likes, book_data)
     top_books = vector_space(books_user_likes, book_data)
@@ -186,8 +195,8 @@ def recom(books_user_likes):
 
 
 def bookdisp():
-    books = pd.read_csv("C:\\Projects\\python\\book_recom\\dataset\\Book.csv")
-    img = pd.read_csv("C:\\Projects\\python\\book_recom\\dataset\\Imagez.csv")
+    books = pd.read_csv(dataset_path)
+    img = pd.read_csv(image_path)
 
     title = []
     imgg = []
